@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html><head><meta name="viewport" content="width=device-width,initial-scale=1.0" /><title>hw-maze-game</title><style>
+    table > tbody > tr > td, table > tr > td {
+        border: 1px solid;
+        width: 16px;
+        height: 16px;
+    }
+    .me {
+        background-color: green;
+    }
+    .other {
+        background-color: blue;
+    }
+</style></head>
+<body><script src="/socket.io/socket.io.js"></script>
+<script src="script.js"></script>
+<form onsubmit="globalThis.socket = init(document.getElementById('username').value); socket.on('taken', nameTaken); this.hidden = 'hidden'; document.getElementById('gameplay').style.display = 'block'; document.getElementById('name').textContent = globalThis.name; socket.on('chatMessage', logMessage); socket.on('people', people); initKeyboard(); socket.on('online', function(num) { document.getElementById('online').textContent = num; });" action="javascript:;">
+    <label>Your name:
+    <input id="username" /></label>
+    <input type="submit" />
+</form>
+<div id="gameplay" style="display: none;">
+    <p>You are <span id="name">$NAME</span>.</p>
+    <p>Map:</p>
+    <table id="map"></table>
+    <script>
+        for (var i = 0; i < 10; i++) {
+            var row = document.createElement('tr');
+            for (var j = 0; j < 10; j++) {
+                var col = document.createElement('td');
+                col.innerHTML = '&nbsp;';
+                col.setAttribute('id', `r${i}c${j}`);
+                row.appendChild(col);
+            }
+            document.getElementById('map').appendChild(row);
+        }
+    </script>
+    <details style="position: fixed; bottom: 10px; right: 10px; background-color: black; color: white; padding: 7px; border-radius: 7px; width: 25%; max-height: 75vh; overflow: scroll;">
+        <p>Welcome. Messages are not stored, so do not expect them to be available indefinitely.</p>
+        <ul id="chat" style="list-style: none; padding: 0;"></ul>
+        <form onsubmit="sendMessage(document.getElementById('chat-input').value);" action="javascript:;">
+            <label>Message:
+            <input id="chat-input" style="width: 99%;" placeholder="Send a message" /></label>
+        </form>
+        <summary>Chat</summary>
+    </details>
+</div>
+</body></html>

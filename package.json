@@ -1,0 +1,15 @@
+{
+  "name": "hw-maze-game",
+  "version": "1.0.0",
+  "description": "A minigame for harmlesswebsite",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "weeklyd3",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "express": "^4.18.1",
+    "socket.io": "^4.5.0"
+  }
+}
