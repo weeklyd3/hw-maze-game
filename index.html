@@ -1,26 +1,45 @@
 <!DOCTYPE html>
-<html><head><meta name="viewport" content="width=device-width,initial-scale=1.0" /><title>hw-maze-game</title><style>
+<html lang="en"><head><meta name="viewport" content="width=device-width,initial-scale=1.0" /><title>hw-maze-game</title><style>
+    @import url('https://harmlesswebsite.leoshi6.repl.co/style.css');
     table > tbody > tr > td, table > tr > td {
         border: 1px solid;
         width: 16px;
+        font-size: 16px;
         height: 16px;
     }
     .me {
-        background-color: green;
+        background-color: rgba(125, 0, 0, 0.333);
     }
     .other {
-        background-color: blue;
+        background-color: rgba(0, 0, 255, 0.333);
+    }
+    .coin {
+        background-image: url("https://hw-maze-game.weeklyd3.repl.co/coin.svg");
+        background-size: 100% 100%;
+    }
+    .mine {
+        background-image: url("https://hw-maze-game.weeklyd3.repl.co/mine.svg");
+        background-size: 100% 100%;
     }
 </style></head>
-<body><script src="/socket.io/socket.io.js"></script>
-<script src="script.js"></script>
-<form onsubmit="globalThis.socket = init(document.getElementById('username').value); socket.on('taken', nameTaken); this.hidden = 'hidden'; document.getElementById('gameplay').style.display = 'block'; document.getElementById('name').textContent = globalThis.name; socket.on('chatMessage', logMessage); socket.on('people', people); initKeyboard(); socket.on('online', function(num) { document.getElementById('online').textContent = num; });" action="javascript:;">
+<body id="baudy"><script src="/socket.io/socket.io.js"></script>
+    <div style="background: radial-gradient(circle, rgba(7,255,0,1) 0%, rgba(0,212,255,1) 100%);  position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 888;" id="entergame">
+<form style="overflow: scroll; z-index: 8888; position: fixed; top: 50%; left: 50%; width: 75%; height: 75%; transform: translate(-50%, -50%);" onsubmit="this.hidden = 'hidden'; globalThis.socket = init(document.getElementById('username').value); socket.on('taken', nameTaken); this.parentNode.hidden = 'hidden'; document.getElementById('gameplay').style.display = 'block'; document.getElementById('name').textContent = globalThis.name; socket.on('chatMessage', logMessage); socket.on('people', people); initKeyboard(); socket.on('online', function(num) { document.getElementById('online').textContent = num; }); socket.on('coins', coins); socket.on('coin', coin); socket.on('coinNumbers', coinNumbers);" action="javascript:;" id="gameform">
+    <h1>Harmlesswebsite maze game</h1>
+    <h2>Join the game:</h2>
     <label>Your name:
     <input id="username" /></label>
-    <input type="submit" />
+    <input type="submit" value="Enter game" />
 </form>
+        <div id="out" style="display: none;">
+        <h2>You are out!</h2>
+        <p>You got negative coins.</p>
+            <p><button onclick="document.getElementById('out').style.display = 'none'; document.getElementById('gameform').hidden = ''; coin(0);">I'm a big nub and I wanna restart</button></p>
+        </div>
+    </div>
 <div id="gameplay" style="display: none;">
-    <p>You are <span id="name">$NAME</span>.</p>
+    <h2>Gameplay as <span id="name">$NAME</span> - Coins: <span id="coinNumber">0</span></h2>
+    <p hidden="hidden">You are <span>$NAME</span>. Your coins: <span>0</span>.</p>
     <p>Map:</p>
     <table id="map"></table>
     <script>
@@ -35,6 +54,10 @@
             document.getElementById('map').appendChild(row);
         }
     </script>
+    <figure>
+        <figcaption>Coins people have</figcaption>
+        <ol></ol>
+    </figure>
     <details style="position: fixed; bottom: 10px; right: 10px; background-color: black; color: white; padding: 7px; border-radius: 7px; width: 25%; max-height: 75vh; overflow: scroll;">
         <p>Welcome. Messages are not stored, so do not expect them to be available indefinitely.</p>
         <ul id="chat" style="list-style: none; padding: 0;"></ul>
@@ -44,5 +67,6 @@
         </form>
         <summary>Chat</summary>
     </details>
+    <script src="script.js"></script>
 </div>
 </body></html>

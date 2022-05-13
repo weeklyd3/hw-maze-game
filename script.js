@@ -1,6 +1,6 @@
 function init(username) {
     globalThis.name = username;
-    return io.connect('', {query: { name: username}});
+    return io.connect('', { query: { name: username } });
 }
 function nameTaken(username) {
     if (globalThis.name === username) {
@@ -8,7 +8,7 @@ function nameTaken(username) {
     }
 }
 function posChange(people) {
-    
+
 }
 function logMessage(person, text) {
     console.log(person);
@@ -66,7 +66,7 @@ function initKeyboard() {
             case 40:
                 goAbs(0, 1);
                 break;
-            case 39: 
+            case 39:
                 goAbs(1, 0);
                 break;
             case 38:
@@ -85,4 +85,56 @@ function goAbs(x, y) {
 function go(x, y) {
     if (x < 0 || x > 9 || y < 0 || y > 9) return;
     socket.emit('positionChange', x, y);
+}
+function coins(places) {
+    for (var i = 0; i < 9; i++) {
+        for (var j = 0; j < 9; j++) {
+            document.getElementById(`r${i}c${j}`).classList.remove('coin');
+            document.getElementById(`r${i}c${j}`).classList.remove('mine');
+            if (places[i][j].here.indexOf('coin') > -1) document.getElementById(`r${i}c${j}`).classList.add('coin');
+            if (places[i][j].here.indexOf('mine') > -1) document.getElementById(`r${i}c${j}`).classList.add('mine');
+        }
+    }
+}
+function coin(number) {
+    if (number < 0) {
+        // Out!
+        socket.disconnect();
+        document.getElementById('gameplay').style.display = 'none';
+        document.getElementById('out').style.display = 'block';
+        document.getElementById('entergame').hidden = '';
+    }
+    document.getElementById('coinNumber').textContent = number;
+}
+
+var lb = document.querySelector("ol");
+function coinNumbers(num) {
+    var keys = Object.keys(num);
+    var values = Object.values(num);
+
+    var sortedKeys = [];
+    var sortedValues = [];
+
+    for (const x in values) {
+        let added = false;
+        for (const v in sortedValues) {
+            if (values[x] > sortedValues[v]) {
+                sortedKeys.splice(v, 0, keys[x])
+                sortedValues.splice(v, 0, values[x]);
+                added = true;
+                break;
+            }
+        }
+
+        if (!added) {
+            sortedKeys.push(keys[x]);
+            sortedValues.push(values[x])
+        }
+    }
+    lb.innerHTML = '';
+    for (var i = 0; i < keys.length; i++) {
+        var li = document.createElement('li');
+        li.textContent = `${sortedKeys[i]}: ${sortedValues[i]}`;
+        lb.appendChild(li);
+    }
 }
